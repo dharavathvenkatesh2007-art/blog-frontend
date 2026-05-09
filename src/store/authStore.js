@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 export const useAuth = create((set) => ({
   currentUser: null,
   loading: false,
@@ -20,6 +22,8 @@ export const useAuth = create((set) => ({
           loading: false,
           isAuthenticated: true,
           error: null,
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+
         });
       }
     } catch (err) {

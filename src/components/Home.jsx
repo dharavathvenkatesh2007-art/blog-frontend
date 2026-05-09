@@ -1,40 +1,39 @@
-import React from "react";
-import { useAuth } from "../store/authStore"; // your auth store
+import React, { useEffect } from "react";
+import { useAuth } from "../store/authStore";
+import {
+  articlePageWrapper,
+  articleHeader,
+  articleMainTitle,
+  articleContent,
+} from "../styles/common.js";
 
 function Home() {
-  const user = useAuth((state) => state.currentUser);
+  const { checkAuth } = useAuth();
+
+  // Restore session on mount
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-10">
-      <h1 className="text-4xl font-bold text-amber-700 mb-6">
-        Welcome to My Blog App
-      </h1>
-
-      {!user ? (
-        // Before login
-        <div className="flex gap-6">
-          <button
-            onClick={() => (window.location.href = "/login")}
-            className="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => (window.location.href = "/register")}
-            className="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition"
-          >
-            Register
-          </button>
-        </div>
-      ) : (
-        // After login
-        <div className="text-center">
-          <p className="text-lg text-gray-700 mb-4">
-            Hello, <span className="font-semibold">{user.name}</span>! You are
-            logged in as <span className="font-semibold">{user.role}</span>.
-          </p>
-        </div>
-      )}
+    <div className={articlePageWrapper}>
+      <div className={articleHeader}>
+        <h1 className={articleMainTitle}>Welcome to Blog App</h1>
+      </div>
+      <div className={articleContent}>
+        <h2 className="text-xl font-semibold mb-4">How to use the app</h2>
+        <ol className="list-decimal ml-6 space-y-3 text-gray-700">
+          <li>Register or log in using the navigation menu.</li>
+          <li>Browse articles written by different authors.</li>
+          <li>Read content and share your thoughts in comments.</li>
+          <li>If you are an author, create and manage your own articles.</li>
+          <li>Admins ensure the platform remains safe and high‑quality.</li>
+        </ol>
+        <p className="mt-6 text-gray-600">
+          This app is designed to be responsive and accessible on all devices —
+          whether you’re on a phone, tablet, or desktop.
+        </p>
+      </div>
     </div>
   );
 }
