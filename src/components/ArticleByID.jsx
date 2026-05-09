@@ -41,6 +41,7 @@ function ArticleByID() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Fetch article by ID
   useEffect(() => {
     if (article) return;
 
@@ -49,11 +50,16 @@ function ArticleByID() {
       try {
         const res = await axios.get(
           `https://blog-app-backend-erzv.onrender.com/user-api/article/${id}`,
-          { withCredentials: true }
+          {
+            withCredentials: true,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
         setArticle(res.data.payload);
       } catch (err) {
-        setError(err.response?.data?.error);
+        setError(err.response?.data?.error || "Failed to load article");
       } finally {
         setLoading(false);
       }
@@ -70,7 +76,7 @@ function ArticleByID() {
     });
   };
 
-  // delete & restore article
+  // Delete & restore article
   const toggleArticleStatus = async () => {
     const newStatus = !article.isArticleActive;
     const confirmMsg = newStatus ? "Restore this article?" : "Delete this article?";
@@ -80,7 +86,12 @@ function ArticleByID() {
       const res = await axios.patch(
         "https://blog-app-backend-erzv.onrender.com/author-api/articles",
         { articleId: article._id, isArticleActive: newStatus },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       console.log("SUCCESS:", res.data);
@@ -96,12 +107,12 @@ function ArticleByID() {
     }
   };
 
-  // edit article
+  // Edit article
   const editArticle = (articleObj) => {
     navigate("/edit-article", { state: articleObj });
   };
 
-  // post comment by user
+  // Post comment by user
   const addComment = async (formData) => {
     const commentObj = {
       articleId: article._id,
@@ -110,9 +121,14 @@ function ArticleByID() {
 
     try {
       const res = await axios.put(
-        "https://blog-app-backend-erzv.onrender.com/user-api/article/comment",
+        "https://blog-app-backend-erzv.onrender.com/user-api/articles", //
         commentObj,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
 
       if (res.status === 200) {
