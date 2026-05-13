@@ -68,7 +68,7 @@ function Home() {
 
         {/* Latest Articles Preview */}
         <section className={section}>
-          <h2 className={headingClass + " mb-8"}>Latest Articles</h2>
+          
           <div className={articleGrid}>
             <div className={articleCardClass}>
               <h3 className={articleTitle}>How to Start Blogging</h3>
